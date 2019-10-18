@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\DB;
 class DictionaryController extends Controller
 {
     public function index(Request $request){
-        if(DB::connection()->getDatabaseName())
-        {
-            return "Connected to database ".DB::connection()->getDatabaseName();
-        }
+        return env('RDS_PASSWORD');
     }
 
     public function view(Request $request, $id){
