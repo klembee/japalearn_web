@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DictionaryController extends Controller
 {
     public function index(Request $request){
-        return "index";//view('dictionary.index');
+        return view('dictionary.index');
     }
 
     public function view(Request $request, $id){
