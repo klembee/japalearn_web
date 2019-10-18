@@ -10,7 +10,13 @@ use Illuminate\Support\Facades\DB;
 class DictionaryController extends Controller
 {
     public function index(Request $request){
-        return env('RDS_PASSWORD');
+        return response()->json([
+            'host' => env('DB_HOSTNAME'),
+            'port' => env('DB_PORT'),
+            'dbName' => env('DB_NAME'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+        ]);
     }
 
     public function view(Request $request, $id){
