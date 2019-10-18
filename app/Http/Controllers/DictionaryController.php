@@ -30,6 +30,8 @@ class DictionaryController extends Controller
             return $query->where('meaning', 'LIKE', "%{$request->get('query')}%");
         })->get();
 
+        return count($entries);
+
         $entries->load(['japanese_representations', 'kana_representations']);
 
         return view('dictionary.search', compact('entries', 'query'));
