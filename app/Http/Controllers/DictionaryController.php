@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\DictionaryEntry;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DictionaryController extends Controller
 {
     public function index(Request $request){
-        return env('RDS_HOSTNAME');//view('dictionary.index');
+        if(DB::connection()->getDatabaseName())
+        {
+            return "Connected to database ".DB::connection()->getDatabaseName();
+        }
     }
 
     public function view(Request $request, $id){
