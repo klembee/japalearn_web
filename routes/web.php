@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', 'DictionaryController@index')->name('index');
+Route::get('/view/{id}', 'DictionaryController@view')->name('view');
+
+Route::get('/search', 'DictionaryController@search')->name('search');
