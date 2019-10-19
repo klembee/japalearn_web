@@ -14,7 +14,7 @@ class DictionaryController extends Controller
     }
 
     public function view(Request $request, $id){
-        $entry = DictionaryEntry::query()->where('id', $id)->first();
+        $entry = DictionaryEntry::all();//query()->where('id', $id)->first();
 
         return $entry;
 
