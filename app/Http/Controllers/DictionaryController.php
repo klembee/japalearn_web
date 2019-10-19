@@ -14,10 +14,7 @@ class DictionaryController extends Controller
     }
 
     public function view(Request $request, $id){
-        $entry = DictionaryEntry::all();//query()->where('id', $id)->first();
-
-        return $entry;
-
+        $entry = DictionaryEntry::query()->where('id', $id)->first();
         $entry->load(['meanings', 'japanese_representations', 'kana_representations', 'japanese_representations.kana_representations']);
 
         return view('dictionary.view', compact('entry'));
@@ -32,8 +29,6 @@ class DictionaryController extends Controller
         $entries = DictionaryEntry::query()->whereHas('meanings', function($query) use ($request){
             return $query->where('meaning', 'LIKE', "%{$request->get('query')}%");
         })->get();
-
-        return count($entries);
 
         $entries->load(['japanese_representations', 'kana_representations']);
 
