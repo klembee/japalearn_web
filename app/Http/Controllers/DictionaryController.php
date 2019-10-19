@@ -15,6 +15,9 @@ class DictionaryController extends Controller
 
     public function view(Request $request, $id){
         $entry = DictionaryEntry::query()->where('id', $id)->first();
+
+        return $entry;
+
         $entry->load(['meanings', 'japanese_representations', 'kana_representations', 'japanese_representations.kana_representations']);
 
         return view('dictionary.view', compact('entry'));
