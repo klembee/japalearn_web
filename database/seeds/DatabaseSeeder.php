@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(KanjiTableSeeder::class);
         $this->call(DictionarySeeder::class);
+        $this->call(EntryFrequencySeeder::class);
+        $this->call(EntryRelevenceSeeder::class);
     }
 }

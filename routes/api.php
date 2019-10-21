@@ -20,5 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('kanji')->group(function(){
     Route::get('', 'Api\KanjiApiController@list');
+    Route::get('view/{kanji}', 'Api\KanjiApiController@view')->name('kanji.view');
     Route::get('jlpt/{level}', 'Api\KanjiApiController@jlptLevel');
 });

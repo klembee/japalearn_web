@@ -9,10 +9,12 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-simplexml": "*",
+        "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "ext-simplexml": "*"
+      "ext-intl": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

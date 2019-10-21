@@ -31,4 +31,9 @@ class KanjiApiController extends Controller
         $kanjis = Kanji::query()->where('jlpt_level', $level)->get();
         return $kanjis->load('onReadings', 'kunReadings','meanings');
     }
+
+    public function view(Request $request, $kanji){
+        $kanjiElement = Kanji::query()->where('literal', $kanji)->first();
+        return $kanjiElement;
+    }
 }
