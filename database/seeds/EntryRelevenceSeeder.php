@@ -3,6 +3,7 @@
 
 use App\Models\DictionaryEntry;
 use App\Models\Kanji;
+use App\Utils\UnicodeUtil;
 use Illuminate\Support\Facades\DB;
 
 class EntryRelevenceSeeder extends \Illuminate\Database\Seeder
