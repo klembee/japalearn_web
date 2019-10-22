@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # size of swapfile in megabytes
 swapsize=1024
 
