@@ -9,6 +9,7 @@ class DictionarySeeder extends \Illuminate\Database\Seeder
 {
     public function run(){
         //todo: change to XMLReader() to use less memory
+
         $dic_data = simplexml_load_file("resources/kanjis/JMdict_e.xml")->children() or die("Failed to load the JMdict_e file");
 
         $entries = $dic_data->entry;

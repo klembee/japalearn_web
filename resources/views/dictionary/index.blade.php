@@ -5,4 +5,5 @@
         <input type="text" name="query" />
         <button>Search</button>
     </form>
+    {{phpinfo()}}
 @endsection
