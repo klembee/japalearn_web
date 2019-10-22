@@ -1,10 +1,8 @@
 #!/bin/sh
 # size of swapfile in megabytes
 swapsize=1024
-
 # does the swap file already exist?
 grep -q "swapfile" /etc/fstab
-
 # if not then create it
 if [ $? -ne 0 ]; then
 echo 'swapfile not found. Adding swapfile.'
@@ -16,3 +14,4 @@ echo 'swapfile not found. Adding swapfile.'
 else
   echo 'swapfile found. No changes made.'
 fi
+
