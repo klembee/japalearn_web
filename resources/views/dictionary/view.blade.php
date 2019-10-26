@@ -5,8 +5,12 @@
     <p>Relevence: {{$entry->relevence}}</p>
     <p>Frequency: {{$entry->frequency}}</p>
 
+    {{$entry->id}}
     @if($entry->getJlpt())
         <span class="badge badge-pill badge-primary">JLPT level {{$entry->getJlpt()}}</span>
+    @endif
+    @if($entry->getGrade())
+        <span class="badge badge-pill badge-danger">Grade level {{$entry->getGrade()}}</span>
     @endif
 
     <div>

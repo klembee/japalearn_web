@@ -17,13 +17,13 @@ class DictionaryController extends Controller
     }
 
     public function view(Request $request, $word){
-//        $entry = DictionaryEntry::query()->whereHas('japanese_representations', function(Builder $query) use($word){
-//            $query->where('representation', $word);
-//        })->first();
-//
-//        $entry->load(['meanings', 'japanese_representations', 'kana_representations', 'japanese_representations.kana_representations']);
+        $entry = DictionaryEntry::query()->whereHas('japanese_representations', function(Builder $query) use($word){
+            $query->where('representation', $word);
+        })->first();
 
-//        return DictionaryJapaneseRepresentation::query()->has('kana_representations')->with('kana_representations')->limit(100)->get();//view('dictionary.view', compact('entry'));
+        $entry->load(['meanings', 'japanese_representations', 'kana_representations', 'japanese_representations.kana_representations']);
+
+        return view('dictionary.view', compact('entry'));
     }
 
     public function search(Request $request){

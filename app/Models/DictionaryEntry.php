@@ -3,8 +3,10 @@
 namespace App\Models;
 
 
+use App\Utils\UnicodeUtil;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use phpDocumentor\Reflection\Types\Integer;
 
@@ -13,12 +15,45 @@ class DictionaryEntry extends Model
     protected $table = "dictionary_entries";
 
     public function getJlpt(){
-        $representation = $this->japanese_representations()->first()->representation;
-        $kanji = Kanji::query()->where('literal', $representation)->first();
+        if($this->isKanji()){
+            $kanji = Kanji::query()->where('literal', $this->getRepresentation())->first();
 
-        if(!isset($kanji)) return null;
+            if(!isset($kanji)) return null;
 
-        return $kanji->jlpt_level;
+            return $kanji->jlpt_level;
+        }else{
+            return null;
+        }
+    }
+
+    public function getGrade(){
+        if($this->isKanji()){
+            $kanji = Kanji::query()->where('literal', $this->getRepresentation())->first();
+
+            if(!isset($kanji)) return null;
+
+            return $kanji->grade;
+        }else{
+            return null;
+        }
+    }
+
+    private function isKanji(){
+        $representation = $this->getRepresentation();
+        if(mb_strlen($representation) > 1) return false;
+        if(\IntlChar::ord($representation) < UnicodeUtil::$KANJI_UNICODE_START) return false;
+        return true;
+    }
+
+    private function getRepresentation(){
+        $representation = null;
+        try {
+            $representation = $this->japanese_representations()->firstOrFail()->representation;
+        }catch(ModelNotFoundException $e){
+            return null;
+        }
+
+        return $representation;
     }
 
     public function meanings(){
@@ -47,7 +82,8 @@ class DictionaryEntry extends Model
                     $aScore += 10000;
                 }
 
-                if(isset($b->frequency) && !isset($a->frequency)){
+                if(isset($b->frequency) &&
+                    !isset($a->frequency)){
                     $bScore += 10000;
                 }
 

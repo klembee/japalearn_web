@@ -23,3 +23,5 @@ Route::prefix('kanji')->group(function(){
     Route::get('view/{kanji}', 'Api\KanjiApiController@view')->name('kanji.view');
     Route::get('jlpt/{level}', 'Api\KanjiApiController@jlptLevel');
 });
+
+Route::apiResource('feedback', 'Api\FeedbackController')->only('store');
