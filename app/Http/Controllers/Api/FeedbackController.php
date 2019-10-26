@@ -24,7 +24,7 @@ class FeedbackController extends Controller
     public function store(Request $request){
         try {
             $this->validate($request, [
-                'is_bug' => 'required|boolean',
+                'is_bug' => 'required',
                 'section' => 'required',
                 'description' => 'required'
             ]);
