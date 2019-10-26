@@ -102,6 +102,6 @@ class DictionaryEntry extends Model
                 return $aScore < $bScore ? 1 : -1;
             });
 
-        return $sortedEntries;
+        return $sortedEntries->values();
     }
 }
