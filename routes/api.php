@@ -24,4 +24,8 @@ Route::prefix('kanji')->group(function(){
     Route::get('jlpt/{level}', 'Api\KanjiApiController@jlptLevel');
 });
 
+Route::prefix('dictionary')->group(function(){
+    Route::get('', "Api\DictionaryApiController@search");
+});
+
 Route::apiResource('feedback', 'Api\FeedbackController')->only('store');
