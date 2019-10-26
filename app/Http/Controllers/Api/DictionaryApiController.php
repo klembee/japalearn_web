@@ -51,6 +51,10 @@ class DictionaryApiController extends Controller
         $entries = DictionaryEntry::sort($entries, $query);
         $entries = $entries->take(20);
 
-        return $entries;
+        return response()->json([
+            'success' => true,
+            'message' => "",
+            'entries' => $entries
+        ]);
     }
 }
