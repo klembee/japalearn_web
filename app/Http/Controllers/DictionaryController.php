@@ -42,6 +42,8 @@ class DictionaryController extends Controller
             $suggestion = $romanjiQuery[1];
         }
 
+        $a = microtime(true);
+
         if(!UnicodeUtil::isOnlyJapaneseChars($query)) {
             $entries = DictionaryEntry::query()->whereHas('meanings', function ($q) use ($query) {
                 return $q->where('meaning', 'LIKE', "$query%");
@@ -59,10 +61,17 @@ class DictionaryController extends Controller
             })->get();
         }
 
+        $b = microtime(true);
+
         $entries->load(['japanese_representations', 'kana_representations']);
         $entries = DictionaryEntry::sort($entries, $query);
         $entries = $entries->take(20);
 
-        return view('dictionary.search', compact('entries', 'query', 'suggestion'));
+        $c = microtime(true);
+
+        $queryTime = ($b - $a);
+        $sortTime = ($c - $b);
+
+        return view('dictionary.search', compact('entries', 'query', 'suggestion', 'queryTime', 'sortTime'));
     }
 }

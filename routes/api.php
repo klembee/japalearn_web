@@ -18,6 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::prefix('auth')->group(function(){
+    Route::post('login', 'Api\AuthApiController@login');
+    Route::post('register', 'Api\AuthApiController@register');
+});
+
 Route::prefix('kanji')->group(function(){
     Route::get('', 'Api\KanjiApiController@list');
     Route::get('view/{kanji}', 'Api\KanjiApiController@view')->name('kanji.view');

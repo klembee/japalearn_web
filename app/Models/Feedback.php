@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**

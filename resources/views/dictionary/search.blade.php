@@ -5,6 +5,9 @@
         <p>Did you mean: <a href="{{route('search', ['query' => $suggestion])}}">{{$suggestion}}</a></p>
     @endif
 
+    <p>Query time: {{$queryTime}}</p>
+    <p>Sort time: {{$sortTime}}</p>
+
     @foreach($entries as $entry)
         <div>
             @if(isset($entry->japanese_representations[0]))<h1>{{$entry->japanese_representations[0]->representation}}</h1>
