@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('auth')->group(function(){
     Route::post('login', 'Api\AuthApiController@login');
     Route::post('register', 'Api\AuthApiController@register');
+    Route::middleware('auth:api')->post('verify', 'Api\AuthApiController@verify');
 });
 
 Route::prefix('kanji')->group(function(){

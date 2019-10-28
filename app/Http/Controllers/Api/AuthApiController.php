@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -90,5 +91,23 @@ class AuthApiController extends Controller
             'message' => "Registered successfully",
             'user' => $user
         ]);
+    }
+
+    /**
+     * Check if the user is logged in
+     */
+    public function verify(Request $request){
+        $user = Auth::user();
+        if(!$user){
+            return response()->json([
+                'success' => false,
+                'message' => 'User not logged in'
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'message' => 'User logged in'
+            ]);
+        }
     }
 }
