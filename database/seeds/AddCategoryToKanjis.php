@@ -16,7 +16,7 @@ class AddCategoryToKanjis extends \Illuminate\Database\Seeder
             //find the kanji
             $kanjiRow = \App\Models\Kanji::query()->where('literal', $kanji)->first();
             if($kanjiRow){
-                $category = str_replace("\n", "", $category);
+                $category = str_replace(["\n", "\r"], "", $category);
                 $kanjiRow->category = $category;
                 $kanjiRow->save();
             }
