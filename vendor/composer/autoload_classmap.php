@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddCategoryToKanjis' => $baseDir . '/database/seeds/AddCategoryToKanjis.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Api\\AuthApiController' => $baseDir . '/app/Http/Controllers/Api/AuthApiController.php',

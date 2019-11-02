@@ -500,6 +500,7 @@ class ComposerStaticInit906d30de5f8ed7e873f2e9f9f614b14d
     );
 
     public static $classMap = array (
+        'AddCategoryToKanjis' => __DIR__ . '/../..' . '/database/seeds/AddCategoryToKanjis.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Api\\AuthApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AuthApiController.php',

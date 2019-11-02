@@ -25,6 +25,28 @@ class KanjiApiController extends Controller
     }
 
     /**
+     * Get the categories and
+     */
+    public function categories(Request $request){
+        $kanjis =  Kanji::query()->where('category', '!=', '')->get()->groupBy('category');
+
+        $a = array();
+        foreach ($kanjis->keys() as $key){
+            $entry = [];
+            $entry['title'] = $key;
+            $entry['kanjis'] = $kanjis->get($key);
+            $a[] = $entry;
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'message' => "",
+            'categories' => $a
+        ]);
+    }
+
+    /**
      * Get the kanjis associated with a jlpt level
      */
     public function jlptLevel(Request $request, $level){
