@@ -15,7 +15,9 @@ class Kanji extends Model
 {
     protected $table = "kanjis";
     protected $appends = [
-        'meanings'
+        'meanings',
+        'on_readings',
+        'kun_readings'
     ];
 
     /**
@@ -49,5 +51,23 @@ class Kanji extends Model
         }
 
         return $meanings;
+    }
+
+    public function getOnReadingsAttribute(){
+        $readings = [];
+        foreach($this->onReadings()->get() as $reading){
+            $readings[] = $reading->reading;
+        }
+
+        return $readings;
+    }
+
+    public function getKunReadingsAttribute(){
+        $readings = [];
+        foreach($this->kunReadings()->get() as $reading){
+            $readings[] = $reading->reading;
+        }
+
+        return $readings;
     }
 }

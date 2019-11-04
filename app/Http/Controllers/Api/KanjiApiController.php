@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DictionaryEntry;
 use App\Models\Kanji;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KanjiApiController extends Controller
 {
@@ -28,7 +29,9 @@ class KanjiApiController extends Controller
      * Get the categories and
      */
     public function categories(Request $request){
-        $kanjis =  Kanji::query()->where('category', '!=', '')->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category'])->groupBy('category');
+        $kanjis =  Kanji::query()->where('category', '!=', '')
+            ->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category'])
+            ->groupBy('category');
 
         $a = array();
         foreach ($kanjis->keys() as $key){
