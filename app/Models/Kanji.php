@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kanji extends Model
 {
     protected $table = "kanjis";
+    protected $appends = [
+        'meanings'
+    ];
 
     /**
      * Get the kun readings associated with this kanji
@@ -37,5 +40,14 @@ class Kanji extends Model
      */
     public function meanings(){
         return $this->hasMany(KanjiMeaning::class);
+    }
+
+    public function getMeaningsAttribute(){
+        $meanings = [];
+        foreach($this->meanings()->get() as $meaning){
+            $meanings[] = $meaning->meaning;
+        }
+
+        return $meanings;
     }
 }
