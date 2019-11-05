@@ -25,12 +25,12 @@ Route::prefix('auth')->group(function(){
 });
 
 Route::prefix('kanji')->group(function(){
-    Route::get('{kanji}', 'Api\KanjiApiController@viewKanji');
-
     Route::prefix('categories')->group(function(){
         Route::get('', 'Api\KanjiApiController@categories');
         Route::get('view', 'Api\KanjiApiController@kanjiForCategory');
     });
+
+    Route::get('{kanji}/', 'Api\KanjiApiController@viewKanji');
     Route::get('view/{kanji}', 'Api\KanjiApiController@view')->name('kanji.view');
     Route::get('jlpt/{level}', 'Api\KanjiApiController@jlptLevel');
 });
