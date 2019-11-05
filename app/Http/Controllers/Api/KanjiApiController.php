@@ -83,8 +83,7 @@ class KanjiApiController extends Controller
 
         $category = $request->get("category");
 
-        $kanjis =  Kanji::query()->where('category', $category)
-            ->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category']);
+        $kanjis =  Kanji::query()->where('category', $category)->select(['id', 'literal'])->get()->makeHidden(['on_readings', 'kun_readings'])->toArray();
 
         return response()->json([
             'success' => true,
@@ -92,6 +91,14 @@ class KanjiApiController extends Controller
             'kanjis' => $kanjis
         ]);
 
+    }
+
+    public function viewKanji(Request $request, Kanji $kanji){
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'kanjis' => [$kanji]
+        ]);
     }
 
     /**

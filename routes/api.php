@@ -25,7 +25,7 @@ Route::prefix('auth')->group(function(){
 });
 
 Route::prefix('kanji')->group(function(){
-    Route::get('', 'Api\KanjiApiController@list');
+    Route::get('{kanji}', 'Api\KanjiApiController@viewKanji');
 
     Route::prefix('categories')->group(function(){
         Route::get('', 'Api\KanjiApiController@categories');
