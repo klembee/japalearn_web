@@ -12,6 +12,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\DictionaryEntry;
 use App\Models\Kanji;
+use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,24 +31,67 @@ class KanjiApiController extends Controller
      * Get the categories and
      */
     public function categories(Request $request){
-        $kanjis =  Kanji::query()->where('category', '!=', '')
-            ->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category'])
-            ->groupBy('category');
+//        $kanjis =  Kanji::query()->where('category', '!=', '')
+//            ->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category'])
+//            ->groupBy('category');
+//
+//        $a = array();
+//        foreach ($kanjis->keys() as $key){
+//            $entry = [];
+//            $entry['title'] = $key;
+//            $entry['kanjis'] = $kanjis->get($key);
+//            $a[] = $entry;
+//        }
+//
+//
+//        return response()->json([
+//            'success' => true,
+//            'message' => "",
+//            'categories' => $a
+//        ]);
 
-        $a = array();
-        foreach ($kanjis->keys() as $key){
-            $entry = [];
-            $entry['title'] = $key;
-            $entry['kanjis'] = $kanjis->get($key);
-            $a[] = $entry;
+        $categories = Kanji::query()->select('category')->groupBy('category')->get()->toArray();
+        $c = [];
+        foreach($categories as $category){
+            if($category['category'] != "") {
+                $c[] = [
+                    'category' => $category['category'],
+                    'nb_kanjis' => Kanji::query()->where('category', $category['category'])->count()
+                ];
+            }
         }
-
 
         return response()->json([
             'success' => true,
-            'message' => "",
-            'categories' => $a
+            'message' => '',
+            'categories' => $c
         ]);
+    }
+
+    public function kanjiForCategory(Request $request){
+        try {
+            $this->validate($request, [
+                "category" => 'present'
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'category not present',
+                'kanjis' => [],
+            ]);
+        }
+
+        $category = $request->get("category");
+
+        $kanjis =  Kanji::query()->where('category', $category)
+            ->get(['id', 'literal', 'grade', 'stroke_count', 'frequency', 'jlpt_level', 'category']);
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'kanjis' => $kanjis
+        ]);
+
     }
 
     /**
