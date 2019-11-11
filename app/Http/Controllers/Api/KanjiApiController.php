@@ -83,7 +83,8 @@ class KanjiApiController extends Controller
 
         $category = $request->get("category");
 
-        $kanjis =  Kanji::query()->where('category', $category)->select(['id', 'literal'])->get()->makeHidden(['on_readings', 'kun_readings'])->toArray();
+        //todo: Way to load other page
+        $kanjis =  Kanji::query()->where('category', $category)->select(['id', 'literal'])->limit(50)->get()->makeHidden(['on_readings', 'kun_readings']);
 
         return response()->json([
             'success' => true,

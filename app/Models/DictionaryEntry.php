@@ -13,6 +13,7 @@ use phpDocumentor\Reflection\Types\Integer;
 class DictionaryEntry extends Model
 {
     protected $table = "dictionary_entries";
+    protected $appends = ["kanjis"];
 
     public function getJlpt(){
         if($this->isKanji()){
@@ -66,6 +67,21 @@ class DictionaryEntry extends Model
 
     public function kana_representations(){
         return $this->hasMany(DictionaryKanaRepresentation::class, 'entry_id');
+    }
+
+    public function getKanjisAttribute(){
+        $kanjis = [];
+        $representation = $this->getRepresentation();
+        if($representation == null) return [];
+
+        foreach(mb_str_split($representation) as $character){
+            //If the character is a kanji
+            if(\IntlChar::ord($character) >= UnicodeUtil::$KANJI_UNICODE_START && \IntlChar::ord($character) <= UnicodeUtil::$KANJI_UNICODE_END){
+                $kanjis[] = Kanji::query()->where('literal', $character)->first();
+            }
+        }
+
+        return $kanjis;
     }
 
     static public function sort(Collection $entries, $query){
