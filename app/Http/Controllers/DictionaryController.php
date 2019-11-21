@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Api\DictionaryApiController;
 use App\Models\DictionaryEntry;
 use App\Models\DictionaryJapaneseRepresentation;
 use App\Utils\HepburnUtils;
@@ -33,45 +34,59 @@ class DictionaryController extends Controller
 
         $query = $request->get('query');
 
-        //Check if the query is in romanji and provide suggestion for search
-        $romanjiQuery = HepburnUtils::toHiragana($query);
-        $suggestion = "";
+        $timeA = microtime(true);
+        $entries = DictionaryApiController::searchInDictionary($query);
+        $queryTime = microtime(true) - $timeA;
 
-        //The query contains only romanji characters
-        if($romanjiQuery[0]){
-            $suggestion = $romanjiQuery[1];
-        }
-
-        $a = microtime(true);
-
-        if(!UnicodeUtil::isOnlyJapaneseChars($query)) {
-            $entries = DictionaryEntry::query()->whereHas('meanings', function ($q) use ($query) {
-                return $q->where('meaning', 'LIKE', "$query%");
-            })->get();
-        }
-
-        if((count($entries) == 0 && $romanjiQuery[0]) || UnicodeUtil::isOnlyJapaneseChars($query)){
-            if(!UnicodeUtil::isOnlyJapaneseChars($query)){
-                $query = $romanjiQuery[1];
-            }
-
-            //Search in the kanas
-            $entries = DictionaryEntry::query()->whereHas('kana_representations', function($q) use ($query){
-                return $q->where('representation', 'LIKE', "$query%");
-            })->get();
-        }
-
-        $b = microtime(true);
-
-        $entries->load(['japanese_representations', 'kana_representations']);
+        //Sort the results
+        $timeB = microtime(true);
         $entries = DictionaryEntry::sort($entries, $query);
         $entries = $entries->take(20);
+        $sortTime = microtime(true) - $timeB;
 
-        $c = microtime(true);
-
-        $queryTime = ($b - $a);
-        $sortTime = ($c - $b);
+        $suggestion = "";
 
         return view('dictionary.search', compact('entries', 'query', 'suggestion', 'queryTime', 'sortTime'));
+
+//        //Check if the query is in romanji and provide suggestion for search
+//        $romanjiQuery = HepburnUtils::toHiragana($query);
+//        $suggestion = "";
+//
+//        //The query contains only romanji characters
+//        if($romanjiQuery[0]){
+//            $suggestion = $romanjiQuery[1];
+//        }
+//
+//        $a = microtime(true);
+//
+//        if(!UnicodeUtil::isOnlyJapaneseChars($query)) {
+//            $entries = DictionaryEntry::query()->whereHas('meanings', function ($q) use ($query) {
+//                return $q->where('meaning', 'LIKE', "$query%");
+//            })->get();
+//        }
+//
+//        if((count($entries) == 0 && $romanjiQuery[0]) || UnicodeUtil::isOnlyJapaneseChars($query)){
+//            if(!UnicodeUtil::isOnlyJapaneseChars($query)){
+//                $query = $romanjiQuery[1];
+//            }
+//
+//            //Search in the kanas
+//            $entries = DictionaryEntry::query()->whereHas('kana_representations', function($q) use ($query){
+//                return $q->where('representation', 'LIKE', "$query%");
+//            })->get();
+//        }
+//
+//        $b = microtime(true);
+//
+//        $entries->load(['japanese_representations', 'kana_representations']);
+//        $entries = DictionaryEntry::sort($entries, $query);
+//        $entries = $entries->take(20);
+//
+//        $c = microtime(true);
+//
+//        $queryTime = ($b - $a);
+//        $sortTime = ($c - $b);
+//
+//        return view('dictionary.search', compact('entries', 'query', 'suggestion', 'queryTime', 'sortTime'));
     }
 }

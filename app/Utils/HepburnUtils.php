@@ -24,55 +24,40 @@ class HepburnUtils
         $ptr2 = 0;
         $i = 0;
         foreach (mb_str_split($string) as $character){
-            if($i < mb_strlen($string)) {
-                $window = mb_substr($string, $ptr1, $ptr2 - $ptr1 + 1);
+            if(!UnicodeUtil::isOnlyJapaneseChars($character)) {
+                if ($i < mb_strlen($string)) {
+                    $window = mb_substr($string, $ptr1, $ptr2 - $ptr1 + 1);
 
-                if (is_string($window) && $window != 'n' && array_key_exists($window, HepburnUtils::$roman_to_hiragana)) {
-                    $hiragana = HepburnUtils::$roman_to_hiragana[$window];
-                    $response .= $hiragana;
-
-                    $ptr1 += strlen($window);
-                    $ptr2 += 1;
-                }else if(mb_substr($string, $ptr1, 1) == 'n'){
-                    //Check the next character
-                    if(!array_key_exists(mb_substr($string, $ptr1, 2), HepburnUtils::$roman_to_hiragana)){
-                        $hiragana = HepburnUtils::$roman_to_hiragana['n'];
+                    if (is_string($window) && $window != 'n' && array_key_exists($window, HepburnUtils::$roman_to_hiragana)) {
+                        $hiragana = HepburnUtils::$roman_to_hiragana[$window];
                         $response .= $hiragana;
-                        $ptr1++;
-                        $ptr2++;
-                    }else{
+
+                        $ptr1 += strlen($window);
+                        $ptr2 += 1;
+                    } else if (mb_substr($string, $ptr1, 1) == 'n') {
+                        //Check the next character
+                        if (!array_key_exists(mb_substr($string, $ptr1, 2), HepburnUtils::$roman_to_hiragana)) {
+                            $hiragana = HepburnUtils::$roman_to_hiragana['n'];
+                            $response .= $hiragana;
+                            $ptr1++;
+                            $ptr2++;
+                        } else {
+                            $ptr2++;
+                        }
+
+                    } else {
                         $ptr2++;
                     }
-
-                }else{
-                    $ptr2++;
                 }
+            }else{
+                $response .= $character;
+                $ptr1++;
+                $ptr2++;
             }
             $i++;
         }
 
         return array($ptr1 == $ptr2, $response);
-
-        //Check if there are | in the response. If yes, give two answers
-//        error_log($response);
-//        $pipePosition = mb_strpos($response, "|");
-//
-//        if($pipePosition !== false){
-//
-//            $i = 2;
-//            $before_pipe = mb_substr($response, $pipePosition - 1, 1);
-//
-//            if($before_pipe == 'ゃ' || $before_pipe == 'ゅ' || $before_pipe == 'ょ'){
-//                $i++;
-//            }
-//
-//            $string1 = mb_substr($response, 0, $pipePosition) . mb_substr($response, $pipePosition + $i);
-//            $string2 = mb_substr($response, 0, $pipePosition - ($i - 1)) . mb_substr($response, $pipePosition + 1);
-//
-//            return [$string1, $string2];
-//        }
-
-//        return [$response];
     }
 
     private static $roman_to_hiragana = [

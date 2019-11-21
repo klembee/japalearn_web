@@ -10,9 +10,10 @@
 
     @foreach($entries as $entry)
         <div>
-            @if(isset($entry->japanese_representations[0]))<h1>{{$entry->japanese_representations[0]->representation}}</h1>
-            @elseif(isset($entry->kana_representations[0]))<h1>{{$entry->kana_representations[0]->representation}}</h1>@endif
-            @if(isset($entry->kana_representations[0]))<p>({{$entry->kana_representations[0]->representation}})</p>@endif
+            @if($entry->hasJapaneseRepresentation)
+                <h1><ruby>{{$entry->japanese_representations[0]->representation}} @if($entry->hasKanaRepresentation)<rp>(</rp><rt>{{$entry->kana_representations[0]->representation}}</rt><rp>)</rp>@endif</ruby></h1>
+            @elseif($entry->hasKanaRepresentation)<h1>{{$entry->kana_representations[0]->representation}}</h1>@endif
+
             <h3>Meanings</h3>
             <ol>
                 @foreach($entry->meanings as $meaning)

@@ -21,31 +21,8 @@ class DictionaryApiController extends Controller
 
         $query = $request->get('query');
 
-        //Check if the query is in romanji and provide suggestion for search
-        $romanjiQuery = HepburnUtils::toHiragana($query);
-        $suggestion = "";
-
-        //The query contains only romanji characters
-        if($romanjiQuery[0]){
-            $suggestion = $romanjiQuery[1];
-        }
-
-        if(!UnicodeUtil::isOnlyJapaneseChars($query)) {
-            $entries = DictionaryEntry::query()->whereHas('meanings', function ($q) use ($query) {
-                return $q->where('meaning', 'LIKE', "$query%");
-            })->get();
-        }
-
-        if((count($entries) == 0 && $romanjiQuery[0]) || UnicodeUtil::isOnlyJapaneseChars($query)){
-            if(!UnicodeUtil::isOnlyJapaneseChars($query)){
-                $query = $romanjiQuery[1];
-            }
-
-            //Search in the kanas
-            $entries = DictionaryEntry::query()->whereHas('kana_representations', function($q) use ($query){
-                return $q->where('representation', 'LIKE', "$query%");
-            })->get();
-        }
+        //Search in the kanas
+        $entries = self::searchInDictionary($query);
 
         $entries->load(['japanese_representations', 'kana_representations']);
         $entries = DictionaryEntry::sort($entries, $query);
@@ -56,5 +33,32 @@ class DictionaryApiController extends Controller
             'message' => "",
             'entries' => $entries
         ]);
+    }
+
+    static public function searchInDictionary($query){
+        $hepburnResponse = HepburnUtils::toHiragana($query);
+
+        error_log($hepburnResponse[0]);
+
+        if($hepburnResponse[0]){
+            $hiraganaQuery = $hepburnResponse[1];
+        }else{
+            $hiraganaQuery = $query;
+        }
+
+        $entries = DictionaryEntry::query()->whereHas('japanese_representations', function($q) use ($hiraganaQuery){
+            return $q->where('representation', '=', "$hiraganaQuery");
+        })->orWhereHas('kana_representations', function($q) use ($hiraganaQuery){
+            return $q->where('representation', '=', "$hiraganaQuery");
+        });
+
+        //If the query is in english
+        if(!$hepburnResponse[0] || $entries->count() == 0){
+            $entries->orWhereHas('meanings', function($q) use($query){
+                return $q->where('meaning', 'LIKE', "%$query%");
+            });
+        }
+
+        return $entries->get();
     }
 }

@@ -13,7 +13,7 @@ use phpDocumentor\Reflection\Types\Integer;
 class DictionaryEntry extends Model
 {
     protected $table = "dictionary_entries";
-    protected $appends = ["kanjis"];
+    protected $appends = ["kanjis", "hasJapaneseRepresentation", "hasKanaRepresentation"];
 
     public function getJlpt(){
         if($this->isKanji()){
@@ -69,6 +69,14 @@ class DictionaryEntry extends Model
         return $this->hasMany(DictionaryKanaRepresentation::class, 'entry_id');
     }
 
+    public function getHasJapaneseRepresentationAttribute(){
+        return $this->japanese_representations->count() > 0;
+    }
+
+    public function getHasKanaRepresentationAttribute(){
+        return $this->kana_representations->count() > 0;
+    }
+
     public function getKanjisAttribute(){
         $kanjis = [];
         $representation = $this->getRepresentation();
@@ -104,13 +112,20 @@ class DictionaryEntry extends Model
                 }
 
                 //If the query is exactly the meaning give this result
+                $meaningsIndexStart = $a->meanings[0]->id;
                 foreach ($a->meanings as $meaning){
-                    if($meaning->meaning == $query){
+                    if(in_array($query, explode(';', $meaning->meaning))){
+                        $aScore += 10000;
+                    }
+                    if(mb_strpos($meaning, $query) !== false){
                         $aScore += 10000;
                     }
                 }
                 foreach ($b->meanings as $meaning){
-                    if($meaning->meaning == $query){
+                    if(in_array($query, explode(';', $meaning->meaning))){
+                        $bScore += 10000;
+                    }
+                    if(mb_strpos($meaning, $query) !== false){
                         $bScore += 10000;
                     }
                 }

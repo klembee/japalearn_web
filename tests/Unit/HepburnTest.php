@@ -56,4 +56,12 @@ class HepburnTest extends TestCase
         $source = "Good morning";
         $this->assertFalse(HepburnUtils::toHiragana($source)[0]);
     }
+
+    public function test_contains_japanese_char(){
+        $source = "あさ";
+        $this->assertEquals([true, 'あさ'], HepburnUtils::toHiragana($source));
+
+        $source = "あsa";
+        $this->assertEquals([true, 'あさ'], HepburnUtils::toHiragana($source));
+    }
 }
