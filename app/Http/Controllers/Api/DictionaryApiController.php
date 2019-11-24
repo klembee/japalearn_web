@@ -38,7 +38,7 @@ class DictionaryApiController extends Controller
     static public function searchInDictionary($query){
         $hepburnResponse = HepburnUtils::toHiragana($query);
 
-        error_log($hepburnResponse[0]);
+        error_log("asdf " . $hepburnResponse[1]);
 
         if($hepburnResponse[0]){
             $hiraganaQuery = $hepburnResponse[1];

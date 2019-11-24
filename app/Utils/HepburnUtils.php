@@ -25,7 +25,7 @@ class HepburnUtils
         $i = 0;
         foreach (mb_str_split($string) as $character){
             if(!UnicodeUtil::isOnlyJapaneseChars($character)) {
-                if ($i < mb_strlen($string)) {
+                if ($i <= mb_strlen($string)) {
                     $window = mb_substr($string, $ptr1, $ptr2 - $ptr1 + 1);
 
                     if (is_string($window) && $window != 'n' && array_key_exists($window, HepburnUtils::$roman_to_hiragana)) {
@@ -36,7 +36,7 @@ class HepburnUtils
                         $ptr2 += 1;
                     } else if (mb_substr($string, $ptr1, 1) == 'n') {
                         //Check the next character
-                        if (!array_key_exists(mb_substr($string, $ptr1, 2), HepburnUtils::$roman_to_hiragana)) {
+                        if (!array_key_exists(mb_substr($string, $ptr1, 2), HepburnUtils::$roman_to_hiragana) || $i == mb_strlen($string) - 1) {
                             $hiragana = HepburnUtils::$roman_to_hiragana['n'];
                             $response .= $hiragana;
                             $ptr1++;

@@ -33,6 +33,12 @@ class HepburnTest extends TestCase
 
         $source = "kuu";
         $this->assertEquals([true,'くう'], HepburnUtils::toHiragana($source));
+
+        $source = "ain";
+        $this->assertEquals([true, 'あいん'], HepburnUtils::toHiragana($source));
+
+        $source = "saikin";
+        $this->assertEquals([true, 'さいきん'], HepburnUtils::toHiragana($source));
     }
 
     public function test_yoon_transform_to_hiragana_from_romanji(){

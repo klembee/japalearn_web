@@ -114,6 +114,9 @@ class DictionaryEntry extends Model
                 //If the query is exactly the meaning give this result
                 $meaningsIndexStart = $a->meanings[0]->id;
                 foreach ($a->meanings as $meaning){
+                    if($query == $meaning->meaning){
+                        $aScore += 40000;
+                    }
                     if(in_array($query, explode(';', $meaning->meaning))){
                         $aScore += 10000;
                     }
@@ -122,6 +125,9 @@ class DictionaryEntry extends Model
                     }
                 }
                 foreach ($b->meanings as $meaning){
+                    if($query == $meaning->meaning){
+                        $bScore += 40000;
+                    }
                     if(in_array($query, explode(';', $meaning->meaning))){
                         $bScore += 10000;
                     }
