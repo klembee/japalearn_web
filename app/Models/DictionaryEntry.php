@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Utils\UnicodeUtil;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -12,6 +13,8 @@ use phpDocumentor\Reflection\Types\Integer;
 
 class DictionaryEntry extends Model
 {
+    use Cachable;
+
     protected $table = "dictionary_entries";
     protected $appends = ["kanjis", "hasJapaneseRepresentation", "hasKanaRepresentation"];
 
@@ -70,11 +73,11 @@ class DictionaryEntry extends Model
     }
 
     public function getHasJapaneseRepresentationAttribute(){
-        return $this->japanese_representations->count() > 0;
+        return $this->japanese_representations()->count() > 0;
     }
 
     public function getHasKanaRepresentationAttribute(){
-        return $this->kana_representations->count() > 0;
+        return $this->kana_representations()->count() > 0;
     }
 
     public function getKanjisAttribute(){
