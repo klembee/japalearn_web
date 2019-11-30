@@ -25,7 +25,7 @@ class DictionaryApiController extends Controller
         //Search in the kanas
         $entries = self::searchInDictionary($query);
 
-        $entries->load(['japanese_representations', 'kana_representations']);
+//        $entries->load(['japanese_representations', 'kana_representations']);
         $entries = DictionaryEntry::sort($entries, $query);
         $entries = $entries->take(20);
 

@@ -39,4 +39,8 @@ Route::prefix('dictionary')->group(function(){
     Route::get('', "Api\DictionaryApiController@search");
 });
 
+Route::middleware('auth:api')->prefix('lexic')->group(function(){
+    Route::post('sync', "Api\LexicApiController@sync");
+});
+
 Route::apiResource('feedback', 'Api\FeedbackController')->only('store');
