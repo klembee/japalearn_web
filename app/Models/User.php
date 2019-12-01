@@ -45,4 +45,8 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($password);
     }
+
+    public function lexics(){
+        return $this->hasMany(Lexic::class);
+    }
 }
